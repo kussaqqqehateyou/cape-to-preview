@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Cape Preview Generator</title>
+	</head>
+	<body>
+		<h1>Cape texture</h1>
+		<form>
+			<input
+				type="file"
+				onchange="setPreview()"
+				id="texture"
+				placeholder="Texture"
+			/>
+		</form>
+		<h1>Cape Preview</h1>
+		<div id="preview"></div>
+
+		<script src="js/skinview3d.bundle.js"></script>
+		<script>
+			function obtainTextureUrl(id) {
+				const fileInput = document.getElementById(id);
+				const file = fileInput.files[0];
+
+				return URL.createObjectURL(file);
+			}
+			async function setPreview() {
+				document.getElementById("preview").innerHTML = "";
+				const configurations = [
+					{
+						skin: null,
+						cape: "https://capes.silentclient.ml/capes/kirillsaint.png",
+					},
+				];
+				const skinViewer = new skinview3d.SkinViewer({
+					width: 685,
+					height: 685,
+					renderPaused: true,
+					zoom: 1.5,
+				});
+				skinViewer.camera.rotation.x = -2.9445863039147926;
+				skinViewer.camera.rotation.y = -0.24129215654046646;
+				skinViewer.camera.rotation.z = -3.0939339772752144;
+				skinViewer.camera.position.x = -6.712216245243998;
+				skinViewer.camera.position.y = 5.338818424577546;
+				skinViewer.camera.position.z = -26.748223451710654;
+
+				try {
+					await Promise.all([
+						skinViewer.loadSkin(null),
+						skinViewer.loadCape(obtainTextureUrl("texture")),
+					]);
+				} catch {
+					document.getElementById("texture").value = "";
+					alert("Is not Cape!");
+					return;
+				}
+				skinViewer.render();
+				const image = skinViewer.canvas.toDataURL();
+				document.getElementById(
+					"preview"
+				).innerHTML = `<img src="${image}" width="230" height="230" /><a href="${image}" download="preview">download</a>`;
+
+				skinViewer.dispose();
+			}
+		</script>
+	</body>
+</html>
