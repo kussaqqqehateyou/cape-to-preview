@@ -197,10 +197,21 @@
 			for (const file of document.getElementById('texture').files) {
 				try {
 					const reader = new FileReader()
-					reader.onload = function (e) {
+					reader.onload = async function (e) {
 						let base64_image = e.target.result
+						let image = new Image()
+						await Promise.all([
+							image.src = e.target.result
+						])
 
-						CIP.cropImage64(base64_image, 0, 0, 704, 544).then(async cropped_image => {
+						let crop_width = image.width
+						let crop_height = image.height
+
+						if (((crop_width / 704) % 2 === 0 && (crop_height / 736) % 2 === 0) || (crop_width / 704 === 1 && crop_height / 736 === 1)) {
+							crop_height = 544 * (crop_width / 704)
+						}
+
+						CIP.cropImage64(base64_image, 0, 0, crop_width, crop_height).then(async cropped_image => {
 							const blobBin = atob(cropped_image.split(",")[1])
 							let array = []
 							for (var i = 0; i < blobBin.length; i++) {
