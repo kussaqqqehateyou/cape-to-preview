@@ -8,7 +8,7 @@
 <body>
 	<h1>Cape texture</h1>
 	<form>
-		<input type="file" onchange="setPreview()" id="texture" placeholder="Texture" />
+		<input type="file" onchange="setPreview()" id="texture" placeholder="Texture" multiple />
 	</form>
 	<h1>Cape Preview</h1>
 	<div id="preview"></div>
@@ -207,9 +207,9 @@
 						let crop_width = image.width
 						let crop_height = image.height
 
-						if (((crop_width / 704) % 2 === 0 && (crop_height / 736) % 2 === 0) || (crop_width / 704 === 1 && crop_height / 736 === 1)) {
-							crop_height = 544 * (crop_width / 704)
-						}
+						// if (((crop_width / 704) % 2 === 0 && (crop_height / 736) % 2 === 0) || (crop_width / 704 === 1 && crop_height / 736 === 1)) {
+						crop_height = 544 * (crop_width / 704)
+						// }
 
 						CIP.cropImage64(base64_image, 0, 0, crop_width, crop_height).then(async cropped_image => {
 							const blobBin = atob(cropped_image.split(",")[1])
